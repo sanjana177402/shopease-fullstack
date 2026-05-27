@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ShopEase - Products</title>
+
+    <style>
+        body { margin:0; font-family:Arial; background:#f5f6fa; }
+
+        .navbar {
+            background:#0f172a;
+            color:white;
+            padding:15px 40px;
+            display:flex;
+            justify-content:space-between;
+        }
+
+        .nav-links a {
+            color:white;
+            margin-left:20px;
+            text-decoration:none;
+        }
+
+        .container { padding:30px 40px; }
+
+        .controls {
+            display:flex;
+            gap:10px;
+            margin-bottom:20px;
+        }
+
+        input, select {
+            padding:10px;
+            border-radius:8px;
+            border:1px solid #ccc;
+        }
+
+        .grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+            gap:20px;
+        }
+
+        .card {
+            background:white;
+            padding:15px;
+            border-radius:12px;
+        }
+
+        .product-img {
+            width:100%;
+            height:150px;
+            object-fit:cover;
+            border-radius:8px;
+        }
+
+        .btn {
+            background:black;
+            color:white;
+            padding:6px 10px;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>🛍 ShopEase</h2>
+    <div class="nav-links">
+        <a href="cart.html">Cart</a>
+        <a href="wishlist.html">Wishlist ❤️</a>
+        <a href="orders.html">Orders</a>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Products</h1>
+
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Search..." onkeyup="filterProducts()">
+
+        <select id="categoryFilter" onchange="filterProducts()">
+            <option value="">All Categories</option>
+        </select>
+
+        <select id="sortOption" onchange="sortProducts()">
+            <option value="">Sort</option>
+            <option value="low">Price Low → High</option>
+            <option value="high">Price High → Low</option>
+        </select>
+    </div>
+
+    <div class="grid" id="productList"></div>
+      <div style="margin-top:20px;">
+    
+    <button class="btn" onclick="prevPage()">
+        Previous
+    </button>
+
+    <button class="btn" onclick="nextPage()">
+        Next
+    </button>
+
+</div>
+</div>
+
+<script>
+let allProducts = [];
+const userId = localStorage.getItem("userId");
+
+
+let currentPage = 1;
+
+async function loadProducts(page = 1) {
+
+    const res = await fetch(
+        `http://127.0.0.1:8000/products/?page=${page}`
+    );
+
+    const data = await res.json();
+
+    allProducts = data;
+
+    renderProducts(data);
+
+    loadCategories(data);
+}
+
+
+function renderProducts(products) {
+    const container = document.getElementById("productList");
+    container.innerHTML = "";
+
+    if (products.length === 0) {
+        container.innerHTML = "<p>No products found 😢</p>";
+        return;
+    }
+
+    products.forEach(p => {
+        container.innerHTML += `
+            <div class="card">
+                <img src="${p.image}" class="product-img"/>
+                <h3>${p.name}</h3>
+                <p>₹${p.price}</p>
+
+                <button class="btn" onclick="addToCart(${p.id})">
+                    Add to Cart
+                </button>
+
+                <button onclick="addToWishlist(${p.id})">❤️</button>
+            </div>
+        `;
+    });
+}
+
+
+function loadCategories(products) {
+    const select = document.getElementById("categoryFilter");
+    const cats = [...new Set(products.map(p => p.category_name))];
+
+    cats.forEach(c => {
+        if (c) {
+            select.innerHTML += `<option value="${c}">${c}</option>`;
+        }
+    });
+}
+
+
+function filterProducts() {
+    const search = document.getElementById("searchInput").value.toLowerCase();
+    const category = document.getElementById("categoryFilter").value;
+
+    const filtered = allProducts.filter(p => {
+        return p.name.toLowerCase().includes(search) &&
+               (category ? p.category_name === category : true);
+    });
+
+    renderProducts(filtered);
+}
+
+
+function sortProducts() {
+    const option = document.getElementById("sortOption").value;
+
+    let sorted = [...allProducts];
+
+    if (option === "low") {
+        sorted.sort((a,b) => a.price - b.price);
+    } else if (option === "high") {
+        sorted.sort((a,b) => b.price - a.price);
+    }
+
+    renderProducts(sorted);
+}
+
+
+function addToCart(productId) {
+    fetch("http://127.0.0.1:8000/cart/add/", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({ userId, productId, quantity:1 })
+    });
+
+    alert("Added to cart");
+}
+
+
+function addToWishlist(id) {
+    let w = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+    if (!w.includes(id)) w.push(id);
+
+    localStorage.setItem("wishlist", JSON.stringify(w));
+    alert("Added to wishlist ❤️");
+}
+function nextPage() {
+
+    currentPage++;
+
+    loadProducts(currentPage);
+}
+
+function prevPage() {
+
+    if(currentPage > 1) {
+
+        currentPage--;
+
+        loadProducts(currentPage);
+    }
+}
+loadProducts();
+</script>
+
+</body>
+</html>
