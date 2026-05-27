@@ -51,7 +51,7 @@ class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = request.user  # ← gets user directly from the JWT token
+        user = request.user  
         return Response({
             "id": user.id,
             "username": user.username,
