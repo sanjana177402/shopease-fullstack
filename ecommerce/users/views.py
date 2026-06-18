@@ -34,14 +34,14 @@ class LoginView(APIView):
         if not check_password(password, user.password):
             return Response({"error": "Invalid credentials"}, status=400)
 
-        # Generate JWT tokens
+    
         refresh = RefreshToken.for_user(user)
 
         return Response({
             "message": "Login successful",
             "userId": user.id,
-            "access": str(refresh.access_token),   # ← short-lived token
-            "refresh": str(refresh)                 # ← long-lived token
+            "access": str(refresh.access_token),   
+            "refresh": str(refresh)                 
         })
 
 from rest_framework.permissions import IsAuthenticated
@@ -51,7 +51,7 @@ class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = request.user  # ← gets user directly from the JWT token
+        user = request.user  
         return Response({
             "id": user.id,
             "username": user.username,
