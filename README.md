@@ -1,0 +1,2 @@
+# shopease-ecommerce
+ShopEase is a full-stack ecommerce web application built using Python, Django REST Framework, HTML, CSS, and JavaScript. The project includes JWT authentication, product listing, search, sorting, pagination, cart, wishlist, orders, and payment simulation features. REST APIs were developed and tested using Postman. The project demonstrates frontend-backend integration, API handling, responsive UI design, and full-stack development concepts.
