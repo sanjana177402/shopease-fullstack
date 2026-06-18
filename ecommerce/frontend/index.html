@@ -116,7 +116,7 @@ let currentPage = 1;
 async function loadProducts(page = 1) {
 
     const res = await fetch(
-        `http://127.0.0.1:8000/products/?page=${page}`
+        `https://shopease-fullstack.onrender.com/products/?page=${page}`
     );
 
     const data = await res.json();
@@ -197,7 +197,7 @@ function sortProducts() {
 
 
 function addToCart(productId) {
-    fetch("http://127.0.0.1:8000/cart/add/", {
+    fetch("https://shopease-fullstack.onrender.com/cart/add/", {
         method:"POST",
         headers:{ "Content-Type":"application/json" },
         body:JSON.stringify({ userId, productId, quantity:1 })

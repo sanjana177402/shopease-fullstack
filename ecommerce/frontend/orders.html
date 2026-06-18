@@ -173,7 +173,7 @@ if(!userId){
 
 function loadOrders(){
 
-    fetch(`http://127.0.0.1:8000/orders/?userId=${userId}`)
+    fetch(`https://shopease-fullstack.onrender.com/orders/?userId=${userId}`)
 
     .then(res => res.json())
 

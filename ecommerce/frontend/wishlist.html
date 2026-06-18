@@ -84,7 +84,7 @@ async function loadWishlist() {
         return;
     }
 
-    const res = await fetch("http://127.0.0.1:8000/products/");
+    const res = await fetch("https://shopease-fullstack.onrender.com/products/");
     const products = await res.json();
 
     const items = products.filter(p => ids.includes(p.id));

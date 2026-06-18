@@ -207,7 +207,7 @@ async function loadCart() {
   container.innerHTML = "<div class='center'>Loading...</div>";
 
   try {
-    const res = await fetch(`http://127.0.0.1:8000/cart/?userId=${userId}`);
+    const res = await fetch(`https://shopease-fullstack.onrender.com/cart/?userId=${userId}`);
     const data = await res.json();
 
     container.innerHTML = "";
@@ -262,7 +262,7 @@ async function loadCart() {
 async function updateQty(productId, qty) {
   if (qty < 1) return;
 
-  await fetch("http://127.0.0.1:8000/cart/update/", {
+  await fetch("https://shopease-fullstack.onrender.com/cart/update/", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ userId, productId, quantity: qty })
@@ -273,7 +273,7 @@ async function updateQty(productId, qty) {
 }
 
 async function removeItem(productId) {
-  await fetch(`http://127.0.0.1:8000/cart/remove/${productId}/?userId=${userId}`, {
+  await fetch(`https://shopease-fullstack.onrender.com/cart/remove/${productId}/?userId=${userId}`, {
     method: "DELETE"
   });
 
