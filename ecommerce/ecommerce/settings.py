@@ -155,3 +155,11 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = 'media'
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default='postgresql://shopease_db_109n_user:POFNUTZfYsltC5aKeDItYM6i9Cvc1p2R@dpg-d8qleaa8qa3s73cd32t0-a/shopease_db_109n'
+    )
+}
