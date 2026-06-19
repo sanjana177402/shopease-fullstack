@@ -171,8 +171,8 @@
 <div class="nav">
   <h3>🛍 ShopEase</h3>
   <div>
-    <a href="index.html">Products</a>
-    <a href="orders.html">Orders</a>
+    <a href="/">Products</a>
+    <a href="/page/orders/">Orders</a>
     <button onclick="logout()">Logout</button>
   </div>
 </div>
@@ -200,7 +200,7 @@
 
 <script>
 const userId = localStorage.getItem("userId");
-if (!userId) window.location.href = "login.html";
+if (!userId) window.location.href = "/login/";
 
 async function loadCart() {
   const container = document.getElementById("cartList");
@@ -288,7 +288,7 @@ function placeOrder(){
         document.getElementById("totalPrice").innerText.replace("₹","")
     );
 
-    window.location.href = "payment.html";
+    window.location.href = "/payment/";
 }
 function showToast(msg) {
   const t = document.getElementById("toast");
