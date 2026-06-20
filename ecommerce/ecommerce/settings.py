@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'orders' ,
     'corsheaders',
     'rest_framework_simplejwt',
+     'wishlist',
 ]
 
 MIDDLEWARE = [

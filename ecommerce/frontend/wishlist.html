@@ -63,50 +63,50 @@
     <div class="nav-links">
         <a href="/">Products</a>
         <a href="/page/cart/">Cart</a>
-        <a href="/wishlist/">Wishlist </a>
+        <a href="/wishlist/">Wishlist</a>
         <a href="/page/orders/">Orders</a>
     </div>
 </div>
 
 <div class="container">
-    <h1>Your Wishlist </h1>
+    <h1>Your Wishlist ❤️</h1>
     <div id="wishlist"></div>
 </div>
 
 <script>
-const ids = JSON.parse(localStorage.getItem("wishlist")) || [];
+const userId = localStorage.getItem("userId");
+
+if (!userId) window.location.href = "/login/";
 
 async function loadWishlist() {
     const container = document.getElementById("wishlist");
+    container.innerHTML = "<p>Loading...</p>";
 
-    if (ids.length === 0) {
-        container.innerHTML = "<p>No items in wishlist </p>";
+    const res = await fetch(`https://shopease-fullstack.onrender.com/wishlist-api/?userId=${userId}`);
+    const items = await res.json();
+
+    if (items.length === 0) {
+        container.innerHTML = "<p>No items in wishlist 😢</p>";
         return;
     }
-
-    const res = await fetch("https://shopease-fullstack.onrender.com/products/");
-    const products = await res.json();
-
-    const items = products.filter(p => ids.includes(p.id));
 
     container.innerHTML = "<div class='grid'>" + items.map(p => `
         <div class="card">
             <img src="${p.image}" />
             <h3>${p.name}</h3>
             <p>₹${p.price}</p>
-            <button class="remove" onclick="removeItem(${p.id})">
+            <button class="remove" onclick="removeItem(${p.productId})">
                 Remove
             </button>
         </div>
     `).join("") + "</div>";
 }
 
-function removeItem(id) {
-    let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-    wishlist = wishlist.filter(i => i !== id);
-
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
-    location.reload();
+async function removeItem(productId) {
+    await fetch(`https://shopease-fullstack.onrender.com/wishlist-api/${productId}/?userId=${userId}`, {
+        method: "DELETE"
+    });
+    loadWishlist();
 }
 
 loadWishlist();

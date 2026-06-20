@@ -18,6 +18,7 @@ urlpatterns = [
     path('cart/', include('cart.urls')),
     path('categories/', include('categories.urls')),
     path('orders/', include('orders.urls')),
+    path('wishlist-api/', include('wishlist.urls')),
     path('page/cart/', TemplateView.as_view(template_name='cart.html')),
     path('page/orders/', TemplateView.as_view(template_name='orders.html')),
     path('', TemplateView.as_view(template_name='index.html')),
