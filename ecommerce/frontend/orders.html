@@ -142,9 +142,9 @@
     <h2>🛍️ ShopEase</h2>
 
     <div>
-        <a href="index.html">Products</a>
+        <a href="/">Products</a>
         <a href="/page/cart/">Cart</a>
-        <a href="orders.html">Orders</a>
+        <a href="/page/orders/">Orders</a>
 
         <button onclick="logout()">
             Logout
@@ -167,7 +167,7 @@
 let userId = localStorage.getItem("userId");
 
 if(!userId){
-    window.location.href = "login.html";
+    window.location.href = "/login/";
 }
 
 
@@ -236,7 +236,7 @@ function logout(){
 
     localStorage.removeItem("userId");
 
-    window.location.href = "login.html";
+    window.location.href = "/login/";
 }
 
 </script>
