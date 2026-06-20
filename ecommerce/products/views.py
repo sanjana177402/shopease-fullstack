@@ -4,6 +4,17 @@ from rest_framework import status
 from .models import Product
 from .serializers import ProductSerializer
 from rest_framework.permissions import AllowAny
+from users.models import User
+
+def is_admin(request):
+    user_id = request.data.get("userId") or request.query_params.get("userId")
+    if not user_id:
+        return False
+    try:
+        user = User.objects.get(id=user_id)
+        return user.role == 'admin'
+    except User.DoesNotExist:
+        return False
 
 class ProductListCreate(APIView):
 
@@ -36,6 +47,8 @@ class ProductListCreate(APIView):
         return Response(serializer.data)
 
     def post(self, request):
+        if not is_admin(request):
+            return Response({"error": "Admin access required"}, status=403)
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -61,6 +74,8 @@ class ProductDetail(APIView):
         return Response(serializer.data)
 
     def put(self, request, id):
+        if not is_admin(request):
+            return Response({"error": "Admin access required"}, status=403)
         product = self.get_object(id)
         if not product:
             return Response({"error": "Not found"}, status=404)
@@ -71,6 +86,8 @@ class ProductDetail(APIView):
         return Response(serializer.errors, status=400)
 
     def delete(self, request, id):
+        if not is_admin(request):
+            return Response({"error": "Admin access required"}, status=403)
         product = self.get_object(id)
         if not product:
             return Response({"error": "Not found"}, status=404)
