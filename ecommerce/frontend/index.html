@@ -96,6 +96,7 @@
 
 <script>
 const userId = localStorage.getItem("userId");
+if (!userId) window.location.href = "/login/";
 let currentPage = 1;
 
 function resetAndLoad() {

@@ -255,6 +255,8 @@
 </div>
 
 <script>
+const userId = localStorage.getItem("userId");
+if (!userId) window.location.href = "/login/";
 let total = localStorage.getItem("cartTotal") || 0;
 
 document.getElementById("totalAmount").innerText =
