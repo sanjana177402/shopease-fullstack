@@ -36,6 +36,7 @@
             background:white;
             padding:15px;
             border-radius:12px;
+            cursor:pointer;
         }
         .product-img {
             width:100%;
@@ -56,7 +57,7 @@
 <body>
 
 <div class="navbar">
-    <h2>🛍 ShopEase</h2>
+    <a href="/" style="color:white; text-decoration:none;"><h2>🛍 ShopEase</h2></a>
     <div class="nav-links">
         <a href="/page/cart/">Cart</a>
         <a href="/wishlist/">Wishlist ❤️</a>
@@ -72,11 +73,6 @@
 
         <select id="categoryFilter" onchange="resetAndLoad()">
             <option value="">All Categories</option>
-            <option value="Clothing">Clothing</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Footwear">Footwear</option>
-            <option value="Books">Books</option>
-            <option value="Home & Kitchen">Home & Kitchen</option>
         </select>
 
         <select id="sortOption" onchange="resetAndLoad()">
@@ -96,8 +92,17 @@
 
 <script>
 const userId = localStorage.getItem("userId");
-if (!userId) window.location.href = "/login/";
 let currentPage = 1;
+
+// Fix 4: Load categories dynamically from API
+async function loadCategories() {
+    const res = await fetch("https://shopease-fullstack.onrender.com/categories/");
+    const categories = await res.json();
+    const select = document.getElementById("categoryFilter");
+    categories.forEach(cat => {
+        select.innerHTML += `<option value="${cat.name}">${cat.name}</option>`;
+    });
+}
 
 function resetAndLoad() {
     currentPage = 1;
@@ -130,24 +135,29 @@ function renderProducts(products) {
 
     products.forEach(p => {
         container.innerHTML += `
-            <div class="card">
+            <div class="card" onclick="window.location.href='/page/product/${p.id}/'">
                 <img src="${p.image}" class="product-img"/>
                 <h3>${p.name}</h3>
                 <p>₹${p.price}</p>
-                <button class="btn" onclick="addToCart(${p.id})">Add to Cart</button>
-                <button onclick="addToWishlist(${p.id})">❤️</button>
+                <button class="btn" onclick="event.stopPropagation(); addToCart(${p.id})">Add to Cart</button>
+                <button onclick="event.stopPropagation(); addToWishlist(${p.id})">❤️</button>
             </div>
         `;
     });
 }
 
 function addToCart(productId) {
+    if (!userId) {
+        alert("Please login to add to cart!");
+        window.location.href = "/login/";
+        return;
+    }
     fetch("https://shopease-fullstack.onrender.com/cart/add/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, productId, quantity: 1 })
     });
-    alert("Added to cart");
+    alert("Added to cart!");
 }
 
 async function addToWishlist(productId) {
@@ -177,6 +187,7 @@ function prevPage() {
     }
 }
 
+loadCategories();
 loadProducts();
 </script>
 
