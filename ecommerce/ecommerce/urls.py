@@ -21,6 +21,7 @@ urlpatterns = [
     path('wishlist-api/', include('wishlist.urls')),
     path('page/cart/', TemplateView.as_view(template_name='cart.html')),
     path('page/orders/', TemplateView.as_view(template_name='orders.html')),
+    path('page/product/<int:id>/', TemplateView.as_view(template_name='product-detail.html')),
     path('', TemplateView.as_view(template_name='index.html')),
     path('register/', TemplateView.as_view(template_name='register.html')),
     path('login/', TemplateView.as_view(template_name='login.html')),
