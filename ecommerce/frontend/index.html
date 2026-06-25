@@ -62,6 +62,8 @@
         <a href="/page/cart/">Cart</a>
         <a href="/wishlist/">Wishlist ❤️</a>
         <a href="/page/orders/">Orders</a>
+        <a href="/login/" id="loginBtn" style="display:none;">Login</a>
+        <a href="#" id="logoutBtn" onclick="logout()" style="display:none;">Logout</a>
     </div>
 </div>
 
@@ -92,9 +94,20 @@
 
 <script>
 const userId = localStorage.getItem("userId");
+
+if (userId) {
+    document.getElementById("logoutBtn").style.display = "inline";
+} else {
+    document.getElementById("loginBtn").style.display = "inline";
+}
+
+function logout() {
+    localStorage.removeItem("userId");
+    window.location.href = "/login/";
+}
+
 let currentPage = 1;
 
-// Fix 4: Load categories dynamically from API
 async function loadCategories() {
     const res = await fetch("https://shopease-fullstack.onrender.com/categories/");
     const categories = await res.json();
